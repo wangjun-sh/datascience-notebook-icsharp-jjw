@@ -68,6 +68,11 @@ RUN xbuild ./iCSharp.sln /property:Configuration=Release /nologo /verbosity:norm
 # Copy files safely
 RUN for line in $(find ./*/bin/Release/*); do cp $line ./build/Release/bin; done
 
+RUN mono ./.nuget/NuGet.exe install Open-XML-SDK
+RUN mono ./.nuget/NuGet.exe install DocumentFormat.OpenXml
+RUN mono ./.nuget/NuGet.exe install iTextSharp 
+
+
 # Install kernel
 COPY kernel.json /icsharp/kernel-spec/kernel.json
 RUN jupyter-kernelspec install --user kernel-spec
