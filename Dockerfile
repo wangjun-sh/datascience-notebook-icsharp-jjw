@@ -28,9 +28,8 @@ RUN apt-get update -y \
   apt-utils \
   && rm -rf /var/lib/apt/lists/*
 
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-
-RUN echo "deb http://download.mono-project.com/repo/debian jessie/snapshots/$MONO_VERSION main" > /etc/apt/sources.list.d/mono-official.list \
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
+  && echo "deb http://download.mono-project.com/repo/debian jessie/snapshots/$MONO_VERSION main" > /etc/apt/sources.list.d/mono-official.list \
   && apt-get update -y\
   && apt-get install -y binutils mono-devel ca-certificates-mono fsharp mono-vbnc nuget referenceassemblies-pcl \
   && rm -rf /var/lib/apt/lists/* /tmp/*
@@ -40,8 +39,8 @@ RUN cert-sync /etc/ssl/certs/ca-certificates.crt \
   && yes | certmgr -ssl -m https://nugetgallery.blob.core.windows.net \
   && yes | certmgr -ssl -m https://nuget.org
 
-RUN mkdir /icsharp
-RUN chown -R $NB_USER /icsharp
+RUN mkdir /icsharp \
+  && chown -R $NB_USER /icsharp
 WORKDIR /icsharp
 
 RUN chown -R $NB_USER $HOME/.config/
@@ -55,22 +54,22 @@ RUN git clone --recursive https://github.com/zabirauf/icsharp.git /icsharp
 
 # Build scriptcs
 WORKDIR /icsharp/Engine
-RUN mozroots --import --sync --quiet
-RUN mono ./.nuget/NuGet.exe restore ./ScriptCs.sln
-RUN mkdir -p artifacts/Release/bin
+RUN mozroots --import --sync --quiet \
+  && mono ./.nuget/NuGet.exe restore ./ScriptCs.sln \
+  && mkdir -p artifacts/Release/bin
 
 # Build iCSharp
 WORKDIR /icsharp
-RUN mozroots --import --sync --quiet
-RUN mono ./.nuget/NuGet.exe restore ./iCSharp.sln
-RUN mkdir -p build/Release/bin
-RUN xbuild ./iCSharp.sln /property:Configuration=Release /nologo /verbosity:normal
-# Copy files safely
-RUN for line in $(find ./*/bin/Release/*); do cp $line ./build/Release/bin; done
+RUN mozroots --import --sync --quiet \
+  && mono ./.nuget/NuGet.exe restore ./iCSharp.sln \
+  && mkdir -p build/Release/bin \
+  && xbuild ./iCSharp.sln /property:Configuration=Release /nologo /verbosity:normal \
+  # Copy files safely
+  && for line in $(find ./*/bin/Release/*); do cp $line ./build/Release/bin; done  \
 
-RUN mono ./.nuget/NuGet.exe install Open-XML-SDK
-RUN mono ./.nuget/NuGet.exe install DocumentFormat.OpenXml
-RUN mono ./.nuget/NuGet.exe install iTextSharp 
+  && mono ./.nuget/NuGet.exe install Open-XML-SDK \
+  && mono ./.nuget/NuGet.exe install DocumentFormat.OpenXml \
+  && mono ./.nuget/NuGet.exe install iTextSharp 
 
 
 # Install kernel
