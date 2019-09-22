@@ -6,7 +6,7 @@ datascience-notebook-icsharp-jjw
 1 https://github.com/jupyter/docker-stacks   
 选择了datascience-notebook为基础的Docker, 里面Python, R都有了。
 
-2 https://github.com/3Dcube/docker-jupyter-icsharp
+2 https://github.com/3Dcube/docker-jupyter-icsharp 
 又从这里添加了C#的kernel  
 
 
