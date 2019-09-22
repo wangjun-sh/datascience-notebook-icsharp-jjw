@@ -18,10 +18,14 @@ EXPOSE 8888
 
 ENV MONO_VERSION 5.0.1.1
 
-RUN apt-get update \
+RUN apt-get update -y \
   && apt-get install -y \ 
   curl \
   git \
+  gnupg \
+  gnupg1 \
+  gnupg2 \
+  apt-utils \
   && rm -rf /var/lib/apt/lists/*
 
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
