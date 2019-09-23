@@ -1,5 +1,5 @@
-# datascience-notebook-icsharp-jjw
-datascience-notebook-icsharp-jjw
+# datascience-notebook with icsharp kernel
+datascience-notebook + icsharp kernel
 
 
 参考了
